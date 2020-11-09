@@ -156,7 +156,7 @@ class PdfYeah:
         self.document.output(self.filename)
 
 
-def make_pdf_worksheet(lazy_data_object: dict):
+def make_pdf_worksheet(lazy_data_object: dict) -> str:
     """
     This function takes a dictionary from a lazy worksheet function and converts that to a pdf and
     saves the file
@@ -180,7 +180,9 @@ def make_pdf_worksheet(lazy_data_object: dict):
 
     validate_lazy_data_dict(lazy_data_object)
 
-    this_pdf = PdfYeah(get_filename(lazy_data_object['url'], lazy_data_object['exercise_type']))
+    pdf_filename = get_filename(lazy_data_object['url'], lazy_data_object['exercise_type'])
+
+    this_pdf = PdfYeah(pdf_filename)
     this_pdf.add_title(lazy_data_object['title'])
     this_pdf.add_text_to_page(lazy_data_object['instructions'])
     this_pdf.add_text_to_page(f"{lazy_data_object['main_text_final']}\n\nText extracted from {lazy_data_object['url']}.")
@@ -188,6 +190,8 @@ def make_pdf_worksheet(lazy_data_object: dict):
     this_pdf.add_text_to_page(lazy_data_object['removed_words_final'])
 
     this_pdf.save_pdf()
+
+    return pdf_filename
 
 
 def make_pdf_answers(lazy_data_object: dict):
