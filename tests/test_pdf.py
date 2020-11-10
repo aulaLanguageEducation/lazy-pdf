@@ -1,6 +1,7 @@
 from unittest import TestCase, mock
 import os
 
+from enums import KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET
 from pdf_creator import (
     validate_lazy_data_dict,
     PdfException,
@@ -21,7 +22,6 @@ def clean_up_pdfs():
             os.remove(os.path.join(cwd, i_file))
 
 
-
 class TestPdf(TestCase):
 
     def test_validate_lazy_data_dict__success(self):
@@ -35,13 +35,13 @@ class TestPdf(TestCase):
                       'url': 1,
                       'exercise_type': 1}
 
-        validate_lazy_data_dict(input_dict)
+        validate_lazy_data_dict(input_dict=input_dict, expected_keys=KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET)
 
     def test_validate_lazy_data_dict__failure_not_dict(self):
         input_dict = ['not a dict!']
 
         with self.assertRaisesRegex(PdfException, 'input not dict'):
-            validate_lazy_data_dict(input_dict)
+            validate_lazy_data_dict(input_dict=input_dict, expected_keys=KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET)
 
     def test_validate_lazy_data_dict__different_keys(self):
         input_dict = {'title': 1,
@@ -52,7 +52,7 @@ class TestPdf(TestCase):
                       'answer_title': 1}
 
         with self.assertRaisesRegex(PdfException, 'incomplete keys'):
-            validate_lazy_data_dict(input_dict)
+            validate_lazy_data_dict(input_dict=input_dict, expected_keys=KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET)
 
     @mock.patch('time.time', return_value=123)
     def test_get_filename__worksheet(self, mock_time):

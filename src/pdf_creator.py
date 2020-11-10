@@ -3,6 +3,8 @@ import hashlib
 import time
 from fpdf import FPDF
 
+from enums import KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET
+
 
 class PdfException(Exception):
     """
@@ -18,17 +20,8 @@ def get_filename(url: str, exercise_type: str, worksheet_type: str = 'worksheet'
     return f"{m.hexdigest()}_{str(round(time.time()))}_{exercise_type}_{worksheet_type}.pdf"
 
 
-def validate_lazy_data_dict(input_dict: dict):
+def validate_lazy_data_dict(input_dict: dict, expected_keys: set):
     """
-        output_dict = {'title': title,
-                       'instructions': instructions,
-                       'main_text_final': main_text_final,
-                       'question_title': question_title,
-                       'removed_words_final': removed_words_final,
-                       'answer_title': answer_title,
-                       'answers_final': answers_final,
-                       'url': url_output_dict['url'],
-                       'exercise_type': 'gap fill worksheet'}
     :param input_dict:
     :return:
     """
@@ -36,27 +29,10 @@ def validate_lazy_data_dict(input_dict: dict):
     if not isinstance(input_dict, dict):
         raise PdfException('input not dict')
 
-    expected_keys = {'title',
-                     'instructions',
-                     'main_text_final',
-                     'question_title',
-                     'removed_words_final',
-                     'answer_title',
-                     'answers_final',
-                     'exercise_type',
-                     'url',
-                     'exercise_type'}
-
     actual_keys = set(input_dict.keys())
 
     if expected_keys.intersection(actual_keys) != expected_keys:
         raise PdfException('incomplete keys')
-
-
-class PdfException(Exception):
-    """
-    Need to inherit from base exception explicitly
-    """
 
 
 class PageException(PdfException):
@@ -178,7 +154,7 @@ def make_pdf_worksheet(lazy_data_object: dict) -> str:
     :return:
     """
 
-    validate_lazy_data_dict(lazy_data_object)
+    validate_lazy_data_dict(input_dict=lazy_data_object, expected_keys=KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET)
 
     pdf_filename = get_filename(lazy_data_object['url'], lazy_data_object['exercise_type'])
 
@@ -216,7 +192,7 @@ def make_pdf_answers(lazy_data_object: dict):
     :return:
     """
 
-    validate_lazy_data_dict(lazy_data_object)
+    validate_lazy_data_dict(input_dict=lazy_data_object, expected_keys=KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET)
 
     this_pdf = PdfYeah(
         get_filename(lazy_data_object['url'], lazy_data_object['exercise_type'], worksheet_type='answers'))
