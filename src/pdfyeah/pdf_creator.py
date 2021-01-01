@@ -3,7 +3,7 @@ import hashlib
 import time
 from fpdf import FPDF
 
-from enums import KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET
+from pdfyeah.enums import KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET
 
 
 class PdfException(Exception):
