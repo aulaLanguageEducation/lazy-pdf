@@ -1,8 +1,8 @@
 from unittest import TestCase, mock
 import os
 
-from enums import KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET
-from pdf_creator import (
+from pdfyeah.enums import KEYS_REQUIRED_FOR_GAP_FILLER_WORKSHEET
+from pdfyeah.pdf_creator import (
     validate_lazy_data_dict,
     PdfException,
     get_filename,
@@ -72,7 +72,7 @@ class TestPdf(TestCase):
 
         self.assertEqual(expected_output, get_filename(url=url, exercise_type=exercise_type, worksheet_type='answers'))
 
-    @mock.patch('pdf_creator.get_filename', return_value='my_test.pdf')
+    @mock.patch('pdfyeah.pdf_creator.get_filename', return_value='my_test.pdf')
     def test_make_pdf_worksheet(self, mock_filename):
         clean_up_pdfs()
 
